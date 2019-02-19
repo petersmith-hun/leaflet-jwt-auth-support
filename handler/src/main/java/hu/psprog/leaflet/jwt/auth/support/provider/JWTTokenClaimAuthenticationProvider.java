@@ -2,7 +2,7 @@ package hu.psprog.leaflet.jwt.auth.support.provider;
 
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.jwt.auth.support.exception.TokenAuthenticationFailureException;
-import hu.psprog.leaflet.jwt.auth.support.service.JWTAuthenticationService;
+import hu.psprog.leaflet.jwt.auth.support.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,18 +21,18 @@ public class JWTTokenClaimAuthenticationProvider implements AuthenticationProvid
 
     private static final String BRIDGE_COULD_NOT_REACH_LEAFLET = "Bridge could not reach Leaflet backend application for authentication.";
 
-    private JWTAuthenticationService jwtAuthenticationService;
+    private AuthenticationService authenticationService;
 
     @Autowired
-    public JWTTokenClaimAuthenticationProvider(JWTAuthenticationService jwtAuthenticationService) {
-        this.jwtAuthenticationService = jwtAuthenticationService;
+    public JWTTokenClaimAuthenticationProvider(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
         try {
-            return jwtAuthenticationService.claimToken(authentication);
+            return authenticationService.claimToken(authentication);
         } catch (CommunicationFailureException e) {
             throw new TokenAuthenticationFailureException(BRIDGE_COULD_NOT_REACH_LEAFLET, e);
         }

@@ -62,30 +62,37 @@ public class JWTTokenAuthentication implements Authentication {
         return details.getName();
     }
 
-    public static class Builder {
+    public static JWTTokenAuthenticationBuilder getBuilder() {
+        return new JWTTokenAuthenticationBuilder();
+    }
+
+    /**
+     * Builder for {@link JWTTokenAuthentication}.
+     */
+    public static class JWTTokenAuthenticationBuilder {
 
         private JWTTokenAuthentication jwtTokenAuthentication;
 
-        public Builder() {
+        private JWTTokenAuthenticationBuilder() {
             jwtTokenAuthentication = new JWTTokenAuthentication();
         }
 
-        public Builder withEmailAddress(String emailAddress) {
+        public JWTTokenAuthenticationBuilder withEmailAddress(String emailAddress) {
             jwtTokenAuthentication.emailAddress = emailAddress;
             return this;
         }
 
-        public Builder withToken(String token) {
+        public JWTTokenAuthenticationBuilder withToken(String token) {
             jwtTokenAuthentication.token = token;
             return this;
         }
 
-        public Builder withAuthenticated(boolean authenticated) {
+        public JWTTokenAuthenticationBuilder withAuthenticated(boolean authenticated) {
             jwtTokenAuthentication.authenticated = authenticated;
             return this;
         }
 
-        public Builder withDetails(AuthenticationUserDetailsModel details) {
+        public JWTTokenAuthenticationBuilder withDetails(AuthenticationUserDetailsModel details) {
             jwtTokenAuthentication.details = details;
             return this;
         }

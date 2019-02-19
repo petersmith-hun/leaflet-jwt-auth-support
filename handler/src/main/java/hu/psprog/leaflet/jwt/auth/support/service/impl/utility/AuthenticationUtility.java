@@ -32,7 +32,7 @@ public class AuthenticationUtility {
      * @return built {@link JWTTokenAuthentication} object to be stored in security context
      */
     public Authentication create(Authentication baseAuthentication, LoginResponseDataModel loginResponseModel) {
-        return new JWTTokenAuthentication.Builder()
+        return JWTTokenAuthentication.getBuilder()
                 .withEmailAddress(baseAuthentication.getPrincipal().toString())
                 .withToken(loginResponseModel.getToken())
                 .withDetails(jwtTokenPayloadReader.readPayload(loginResponseModel.getToken()))
@@ -47,7 +47,7 @@ public class AuthenticationUtility {
      * @return populated {@link JWTTokenAuthentication} object
      */
     public Authentication createTemporal(String token) {
-        return new JWTTokenAuthentication.Builder()
+        return JWTTokenAuthentication.getBuilder()
                 .withDetails(jwtTokenPayloadReader.readPayload(token))
                 .withToken(token)
                 .build();
@@ -72,7 +72,7 @@ public class AuthenticationUtility {
      */
     public void replace(String username, String token) {
 
-        Authentication authentication = new JWTTokenAuthentication.Builder()
+        Authentication authentication = JWTTokenAuthentication.getBuilder()
                 .withEmailAddress(username)
                 .withDetails(jwtTokenPayloadReader.readPayload(token))
                 .withToken(token)

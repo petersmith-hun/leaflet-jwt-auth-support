@@ -6,9 +6,8 @@ import hu.psprog.leaflet.api.rest.request.user.UserPasswordRequestModel;
 import hu.psprog.leaflet.api.rest.response.user.LoginResponseDataModel;
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.bridge.service.UserBridgeService;
-import hu.psprog.leaflet.jwt.auth.support.domain.JWTTokenAuthentication;
 import hu.psprog.leaflet.jwt.auth.support.exception.TokenAuthenticationFailureException;
-import hu.psprog.leaflet.jwt.auth.support.service.JWTAuthenticationService;
+import hu.psprog.leaflet.jwt.auth.support.service.AuthenticationService;
 import hu.psprog.leaflet.jwt.auth.support.service.impl.utility.AuthenticationUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,7 +19,7 @@ import java.util.Objects;
  * @author Peter Smith
  */
 @Service
-public class JWTAuthenticationServiceImpl implements JWTAuthenticationService {
+public class JWTAuthenticationServiceImpl implements AuthenticationService {
 
     private static final String INVALID_USER_CREDENTIALS = "Invalid user credentials.";
 

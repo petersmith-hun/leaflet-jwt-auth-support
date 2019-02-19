@@ -3,7 +3,7 @@ package hu.psprog.leaflet.jwt.auth.support.filter;
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.jwt.auth.support.domain.AuthenticationUserDetailsModel;
 import hu.psprog.leaflet.jwt.auth.support.domain.JWTTokenAuthentication;
-import hu.psprog.leaflet.jwt.auth.support.service.JWTAuthenticationService;
+import hu.psprog.leaflet.jwt.auth.support.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +34,14 @@ public class SessionExtensionFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionExtensionFilter.class);
 
-    private JWTAuthenticationService jwtAuthenticationService;
+    private AuthenticationService authenticationService;
 
     private boolean enabled;
     private int threshold;
 
     @Autowired
-    public SessionExtensionFilter(JWTAuthenticationService jwtAuthenticationService) {
-        this.jwtAuthenticationService = jwtAuthenticationService;
+    public SessionExtensionFilter(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class SessionExtensionFilter extends OncePerRequestFilter {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (isExpiringSoon(authentication)) {
                 try {
-                    jwtAuthenticationService.renewToken(authentication);
+                    authenticationService.renewToken(authentication);
                 } catch (CommunicationFailureException e) {
                     LOGGER.error("Leaflet unreachable - failed to renew user session.", e);
                 }

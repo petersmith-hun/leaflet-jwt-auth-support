@@ -6,9 +6,11 @@ import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import org.springframework.security.core.Authentication;
 
 /**
+ * Authentication related operations.
+ *
  * @author Peter Smith
  */
-public interface JWTAuthenticationService {
+public interface AuthenticationService {
 
     /**
      * Processes password reset request.
