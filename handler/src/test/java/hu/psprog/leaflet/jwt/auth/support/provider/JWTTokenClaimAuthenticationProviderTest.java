@@ -1,6 +1,7 @@
 package hu.psprog.leaflet.jwt.auth.support.provider;
 
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
+import hu.psprog.leaflet.bridge.client.exception.UnauthorizedAccessException;
 import hu.psprog.leaflet.jwt.auth.support.domain.JWTTokenAuthentication;
 import hu.psprog.leaflet.jwt.auth.support.exception.TokenAuthenticationFailureException;
 import hu.psprog.leaflet.jwt.auth.support.service.AuthenticationService;
@@ -9,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -70,7 +70,7 @@ public class JWTTokenClaimAuthenticationProviderTest {
     public void shouldThrowAuthenticationExceptionOnAuthenticationFailure() throws CommunicationFailureException {
 
         // given
-        doThrow(BadCredentialsException.class).when(authenticationService).claimToken(authentication);
+        doThrow(UnauthorizedAccessException.class).when(authenticationService).claimToken(authentication);
 
         // when
         jwtTokenClaimAuthenticationProvider.authenticate(authentication);
