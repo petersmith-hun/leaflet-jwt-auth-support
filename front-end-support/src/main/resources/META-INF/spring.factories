@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  hu.psprog.leaflet.jwt.auth.support.frontend.config.JWTAuthenticationFrontEndSupportConfiguration
