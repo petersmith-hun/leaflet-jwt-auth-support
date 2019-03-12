@@ -12,7 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 /**
- * Standard Spring Security {@link AuthenticationProvider} implementation which handles JWT based authentication for LMS.
+ * Standard Spring Security {@link AuthenticationProvider} implementation which handles JWT based authentication for front-end applications.
  * This provider calls token claim service under Leaflet backend application through Bridge.
  *
  * @author Peter Smith

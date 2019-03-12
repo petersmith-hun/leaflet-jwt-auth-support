@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 /**
+ * Implementation of {@link AuthenticationService}.
+ *
  * @author Peter Smith
  */
 @Service
