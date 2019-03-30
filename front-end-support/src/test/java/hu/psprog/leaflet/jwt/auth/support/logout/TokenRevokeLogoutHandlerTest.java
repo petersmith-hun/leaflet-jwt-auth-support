@@ -1,8 +1,8 @@
 package hu.psprog.leaflet.jwt.auth.support.logout;
 
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
+import hu.psprog.leaflet.bridge.client.exception.UnauthorizedAccessException;
 import hu.psprog.leaflet.jwt.auth.support.exception.LogoutFailedException;
-import hu.psprog.leaflet.jwt.auth.support.exception.TokenAuthenticationFailureException;
 import hu.psprog.leaflet.jwt.auth.support.service.AuthenticationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +37,9 @@ public class TokenRevokeLogoutHandlerTest {
     @Mock
     private AuthenticationService authenticationService;
 
+    @Mock
+    private ForcedLogoutHandler forcedLogoutHandler;
+
     @InjectMocks
     private TokenRevokeLogoutHandler tokenRevokeLogoutHandler;
 
@@ -48,6 +51,20 @@ public class TokenRevokeLogoutHandlerTest {
 
         // then
         verify(authenticationService).revokeToken();
+    }
+
+    @Test
+    public void shouldCallForceLogoutInCaseUnauthorizedExceptionIsThrown() throws CommunicationFailureException {
+
+        // given
+        doThrow(UnauthorizedAccessException.class).when(authenticationService).revokeToken();
+
+        // when
+        tokenRevokeLogoutHandler.logout(request, response, authentication);
+
+        // then
+        verify(forcedLogoutHandler).forceLogout(request);
+        verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     @Test(expected = LogoutFailedException.class)

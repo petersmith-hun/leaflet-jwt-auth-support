@@ -1,6 +1,8 @@
 package hu.psprog.leaflet.jwt.auth.support.filter;
 
 import hu.psprog.leaflet.jwt.auth.support.domain.JWTTokenAuthentication;
+import hu.psprog.leaflet.jwt.auth.support.logout.ForcedLogoutHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -13,7 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.stream.Stream;
 
 /**
  * Filter that forces the user to re-login when their session expires or gets invalidated on Leaflet's side.
@@ -26,22 +27,21 @@ import java.util.stream.Stream;
 @Order
 public class ExpiredSessionFilter extends OncePerRequestFilter {
 
+    private ForcedLogoutHandler forcedLogoutHandler;
+
+    @Autowired
+    public ExpiredSessionFilter(ForcedLogoutHandler forcedLogoutHandler) {
+        this.forcedLogoutHandler = forcedLogoutHandler;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         filterChain.doFilter(request, response);
 
         if (isAuthenticated() && isRequestUnauthorized(response)) {
-            forceInvalidateUserSession(request);
+            forcedLogoutHandler.forceLogout(request);
         }
-    }
-
-    private void forceInvalidateUserSession(HttpServletRequest request) {
-
-        SecurityContextHolder.clearContext();
-        request.getSession(false).invalidate();
-        Stream.of(request.getCookies())
-                .forEach(cookie -> cookie.setMaxAge(0));
     }
 
     private boolean isAuthenticated() {
