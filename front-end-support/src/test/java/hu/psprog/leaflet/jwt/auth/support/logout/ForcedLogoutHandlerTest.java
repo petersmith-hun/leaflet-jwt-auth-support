@@ -1,0 +1,69 @@
+package hu.psprog.leaflet.jwt.auth.support.logout;
+
+import hu.psprog.leaflet.jwt.auth.support.domain.JWTTokenAuthentication;
+import hu.psprog.leaflet.jwt.auth.support.mock.WithMockedJWTUser;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+
+import javax.servlet.http.Cookie;
+import java.util.Arrays;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
+/**
+ * Unit tests for {@link ForcedLogoutHandler}.
+ *
+ * @author Peter Smith
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@TestExecutionListeners(listeners = {
+        DirtiesContextTestExecutionListener.class,
+        WithSecurityContextTestExecutionListener.class})
+public class ForcedLogoutHandlerTest {
+
+    private static final String COOKIE_NAME = "cookie-name";
+    private static final String COOKIE_VALUE = "cookie-value";
+
+    private MockHttpServletRequest request;
+    private MockHttpSession session;
+
+    @InjectMocks
+    private ForcedLogoutHandler forcedLogoutHandler;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        request = new MockHttpServletRequest();
+        session = new MockHttpSession();
+        request.setSession(session);
+        request.setCookies(new Cookie(COOKIE_NAME, COOKIE_VALUE));
+    }
+
+    @Test
+    @WithMockedJWTUser
+    public void shouldForceLogoutUser() {
+
+        // given
+        assertThat("Authentication should be prepared", SecurityContextHolder.getContext().getAuthentication() instanceof JWTTokenAuthentication, is(true));
+
+        // when
+        forcedLogoutHandler.forceLogout(request);
+
+        // then
+        assertThat(SecurityContextHolder.getContext().getAuthentication(), nullValue());
+        assertThat(session.isInvalid(), is(true));
+        assertThat(Arrays.stream(request.getCookies()).allMatch(cookie -> cookie.getMaxAge() == 0), is(true));
+    }
+}

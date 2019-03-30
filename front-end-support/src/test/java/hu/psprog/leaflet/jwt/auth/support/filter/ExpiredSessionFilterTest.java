@@ -1,6 +1,6 @@
 package hu.psprog.leaflet.jwt.auth.support.filter;
 
-import hu.psprog.leaflet.jwt.auth.support.domain.JWTTokenAuthentication;
+import hu.psprog.leaflet.jwt.auth.support.logout.ForcedLogoutHandler;
 import hu.psprog.leaflet.jwt.auth.support.mock.WithMockedJWTUser;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,8 +10,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.test.context.TestExecutionListeners;
@@ -20,15 +18,11 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 /**
  * Unit tests for {@link ExpiredSessionFilter}.
@@ -41,27 +35,23 @@ import static org.hamcrest.Matchers.nullValue;
         WithSecurityContextTestExecutionListener.class})
 public class ExpiredSessionFilterTest {
 
-    private static final String COOKIE_NAME = "cookie-name";
-    private static final String COOKIE_VALUE = "cookie-value";
-
     @Mock
     private FilterChain filterChain;
+
+    @Mock
+    private ForcedLogoutHandler forcedLogoutHandler;
 
     @InjectMocks
     private ExpiredSessionFilter expiredSessionFilter;
 
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-    private MockHttpSession session;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
-        session = new MockHttpSession();
-        request.setSession(session);
-        request.setCookies(new Cookie(COOKIE_NAME, COOKIE_VALUE));
     }
 
     @Test
@@ -75,7 +65,7 @@ public class ExpiredSessionFilterTest {
         expiredSessionFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        assertInvalidatedSession();
+        verify(forcedLogoutHandler).forceLogout(request);
     }
 
     @Test
@@ -89,7 +79,7 @@ public class ExpiredSessionFilterTest {
         expiredSessionFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        assertValidSession(true);
+        verifyZeroInteractions(forcedLogoutHandler);
     }
 
     @Test
@@ -103,7 +93,7 @@ public class ExpiredSessionFilterTest {
         expiredSessionFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        assertValidSession(false);
+        verifyZeroInteractions(forcedLogoutHandler);
     }
 
     @Test
@@ -117,19 +107,6 @@ public class ExpiredSessionFilterTest {
         expiredSessionFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        assertValidSession(true);
-    }
-
-    private void assertValidSession(boolean withJWTAuthentication) {
-        assertThat(SecurityContextHolder.getContext().getAuthentication(), notNullValue());
-        assertThat(SecurityContextHolder.getContext().getAuthentication() instanceof JWTTokenAuthentication, is(withJWTAuthentication));
-        assertThat(session.isInvalid(), is(false));
-        assertThat(Arrays.stream(request.getCookies()).noneMatch(cookie -> cookie.getMaxAge() == 0), is(true));
-    }
-
-    private void assertInvalidatedSession() {
-        assertThat(SecurityContextHolder.getContext().getAuthentication(), nullValue());
-        assertThat(session.isInvalid(), is(true));
-        assertThat(Arrays.stream(request.getCookies()).allMatch(cookie -> cookie.getMaxAge() == 0), is(true));
+        verifyZeroInteractions(forcedLogoutHandler);
     }
 }
