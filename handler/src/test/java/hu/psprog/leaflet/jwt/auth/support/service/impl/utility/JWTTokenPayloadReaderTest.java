@@ -1,5 +1,6 @@
 package hu.psprog.leaflet.jwt.auth.support.service.impl.utility;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.psprog.leaflet.jwt.auth.support.AbstractTokenRelatedTest;
 import hu.psprog.leaflet.jwt.auth.support.domain.AuthenticationUserDetailsModel;
@@ -12,7 +13,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.io.IOException;
 import java.text.ParseException;
 
-import static hu.psprog.leaflet.jwt.auth.support.mock.MockedJWTUserSecurityContextFactory.TOKEN;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -51,7 +51,7 @@ public class JWTTokenPayloadReaderTest extends AbstractTokenRelatedTest {
     public void shouldReturnEmptyResponseOnException() throws IOException {
 
         // given
-        doThrow(IOException.class).when(objectMapper).readValue(anyString(), eq(AuthenticationUserDetailsModel.class));
+        doThrow(JsonProcessingException.class).when(objectMapper).readValue(anyString(), eq(AuthenticationUserDetailsModel.class));
 
         // when
         AuthenticationUserDetailsModel result = jwtTokenPayloadReader.readPayload(TOKEN);

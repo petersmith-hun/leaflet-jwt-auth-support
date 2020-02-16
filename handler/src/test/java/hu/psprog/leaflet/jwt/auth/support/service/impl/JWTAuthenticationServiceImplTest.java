@@ -66,7 +66,7 @@ public class JWTAuthenticationServiceImplTest extends AbstractTokenRelatedTest {
         authenticationService.demandPasswordReset(passwordResetDemandRequestModel);
 
         // then
-        verify(userBridgeService).demandPasswordReset(passwordResetDemandRequestModel);
+        verify(userBridgeService).demandPasswordReset(passwordResetDemandRequestModel, null);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class JWTAuthenticationServiceImplTest extends AbstractTokenRelatedTest {
 
         // then
         verify(authenticationUtility).createAndStoreTemporal(TOKEN);
-        verify(userBridgeService).confirmPasswordReset(userPasswordRequestModel);
+        verify(userBridgeService).confirmPasswordReset(userPasswordRequestModel, null);
     }
 
     @Test
