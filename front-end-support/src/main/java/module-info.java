@@ -4,7 +4,7 @@ open module leaflet.component.security.jwt.support.frontend {
 
     requires java.annotation;
     requires java.compiler;
-    requires slf4j.api;
+    requires org.slf4j;
     requires spring.beans;
     requires spring.boot;
     requires spring.context;
@@ -12,7 +12,7 @@ open module leaflet.component.security.jwt.support.frontend {
     requires spring.security.core;
     requires spring.security.web;
     requires spring.web;
-    requires tomcat.embed.core;
+    requires org.apache.tomcat.embed.core;
 
     exports hu.psprog.leaflet.jwt.auth.support.filter;
     exports hu.psprog.leaflet.jwt.auth.support.filter.device;

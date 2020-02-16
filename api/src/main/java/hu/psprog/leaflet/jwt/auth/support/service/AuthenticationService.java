@@ -21,6 +21,15 @@ public interface AuthenticationService {
     void demandPasswordReset(PasswordResetDemandRequestModel passwordResetDemandRequestModel) throws CommunicationFailureException;
 
     /**
+     * Processes password reset request.
+     *
+     * @param passwordResetDemandRequestModel user's email address wrapped in {@link PasswordResetDemandRequestModel} to request password reset for
+     * @param recaptchaToken ReCaptcha response token
+     * @throws CommunicationFailureException if Bridge fails to reach Leaflet
+     */
+    void demandPasswordReset(PasswordResetDemandRequestModel passwordResetDemandRequestModel, String recaptchaToken) throws CommunicationFailureException;
+
+    /**
      * Processes password reset confirmation.
      *
      * @param userPasswordRequestModel {@link UserPasswordRequestModel} holding the new password and its confirmation
@@ -28,6 +37,16 @@ public interface AuthenticationService {
      * @throws CommunicationFailureException if Bridge fails to reach Leaflet
      */
     void confirmPasswordReset(UserPasswordRequestModel userPasswordRequestModel, String token) throws CommunicationFailureException;
+
+    /**
+     * Processes password reset confirmation.
+     *
+     * @param userPasswordRequestModel {@link UserPasswordRequestModel} holding the new password and its confirmation
+     * @param token temporal password reset token
+     * @param recaptchaToken ReCaptcha response token
+     * @throws CommunicationFailureException if Bridge fails to reach Leaflet
+     */
+    void confirmPasswordReset(UserPasswordRequestModel userPasswordRequestModel, String token, String recaptchaToken) throws CommunicationFailureException;
 
     /**
      * Processes token renewal request for given email address.

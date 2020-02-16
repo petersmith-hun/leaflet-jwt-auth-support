@@ -36,13 +36,23 @@ public class JWTAuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void demandPasswordReset(PasswordResetDemandRequestModel passwordResetDemandRequestModel) throws CommunicationFailureException {
-        userBridgeService.demandPasswordReset(passwordResetDemandRequestModel);
+        userBridgeService.demandPasswordReset(passwordResetDemandRequestModel, null);
+    }
+
+    @Override
+    public void demandPasswordReset(PasswordResetDemandRequestModel passwordResetDemandRequestModel, String recaptchaToken) throws CommunicationFailureException {
+        userBridgeService.demandPasswordReset(passwordResetDemandRequestModel, recaptchaToken);
     }
 
     @Override
     public void confirmPasswordReset(UserPasswordRequestModel userPasswordRequestModel, String token) throws CommunicationFailureException {
+        this.confirmPasswordReset(userPasswordRequestModel, token, null);
+    }
+
+    @Override
+    public void confirmPasswordReset(UserPasswordRequestModel userPasswordRequestModel, String token, String recaptchaToken) throws CommunicationFailureException {
         authenticationUtility.createAndStoreTemporal(token);
-        userBridgeService.confirmPasswordReset(userPasswordRequestModel);
+        userBridgeService.confirmPasswordReset(userPasswordRequestModel, recaptchaToken);
     }
 
     @Override
