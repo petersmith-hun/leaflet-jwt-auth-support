@@ -31,7 +31,7 @@
         <!-- other dependencies -->
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
         <spring.framework.version>5.2.3.RELEASE</spring.framework.version>
-        <spring.security.version>5.2.2.RELEASE</spring.security.version>
+        <spring.security.version>5.3.3.RELEASE</spring.security.version>
         <commons.lang.version>3.9</commons.lang.version>
         <logback.version>1.2.3</logback.version>
         <slf4j.version>1.7.30</slf4j.version>
