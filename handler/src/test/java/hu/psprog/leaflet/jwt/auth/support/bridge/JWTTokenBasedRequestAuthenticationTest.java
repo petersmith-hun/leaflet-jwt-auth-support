@@ -1,14 +1,14 @@
 package hu.psprog.leaflet.jwt.auth.support.bridge;
 
 import hu.psprog.leaflet.jwt.auth.support.mock.WithMockedJWTUser;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extensions;
 import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import java.util.Map;
@@ -22,7 +22,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Peter Smith
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@Extensions({
+        @ExtendWith(SpringExtension.class),
+        @ExtendWith(MockitoExtension.class)
+})
 @TestExecutionListeners(listeners = {
         DirtiesContextTestExecutionListener.class,
         WithSecurityContextTestExecutionListener.class})
@@ -33,11 +36,6 @@ public class JWTTokenBasedRequestAuthenticationTest {
 
     @InjectMocks
     private JWTTokenBasedRequestAuthentication requestAuthentication;
-
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     @WithMockedJWTUser

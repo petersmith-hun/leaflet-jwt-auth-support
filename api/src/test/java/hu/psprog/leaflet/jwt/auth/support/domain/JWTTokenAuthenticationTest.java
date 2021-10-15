@@ -1,9 +1,9 @@
 package hu.psprog.leaflet.jwt.auth.support.domain;
 
 import hu.psprog.leaflet.jwt.auth.support.AbstractTokenRelatedTest;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.text.ParseException;
 
@@ -17,7 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class JWTTokenAuthenticationTest extends AbstractTokenRelatedTest {
 
     private static final String EXPECTED_DATE = "2018-01-07 12:12:01+0000";

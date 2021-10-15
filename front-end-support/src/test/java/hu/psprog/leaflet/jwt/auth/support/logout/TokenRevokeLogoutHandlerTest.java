@@ -4,11 +4,12 @@ import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.bridge.client.exception.UnauthorizedAccessException;
 import hu.psprog.leaflet.jwt.auth.support.exception.LogoutFailedException;
 import hu.psprog.leaflet.jwt.auth.support.service.AuthenticationService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TokenRevokeLogoutHandlerTest {
 
     @Mock
@@ -67,14 +68,14 @@ public class TokenRevokeLogoutHandlerTest {
         verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
-    @Test(expected = LogoutFailedException.class)
+    @Test
     public void shouldThrowCouldNotReachBackendExceptionOnCommunicationFailure() throws CommunicationFailureException {
 
         // given
         doThrow(CommunicationFailureException.class).when(authenticationService).revokeToken();
 
         // when
-        tokenRevokeLogoutHandler.logout(request, response, authentication);
+        Assertions.assertThrows(LogoutFailedException.class, () -> tokenRevokeLogoutHandler.logout(request, response, authentication));
 
         // then
         // exception expected

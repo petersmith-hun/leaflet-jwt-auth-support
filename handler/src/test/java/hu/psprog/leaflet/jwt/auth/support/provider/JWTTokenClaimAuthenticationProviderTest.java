@@ -5,11 +5,12 @@ import hu.psprog.leaflet.bridge.client.exception.UnauthorizedAccessException;
 import hu.psprog.leaflet.jwt.auth.support.domain.JWTTokenAuthentication;
 import hu.psprog.leaflet.jwt.auth.support.exception.TokenAuthenticationFailureException;
 import hu.psprog.leaflet.jwt.auth.support.service.AuthenticationService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.doThrow;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class JWTTokenClaimAuthenticationProviderTest {
 
     @Mock
@@ -53,27 +54,27 @@ public class JWTTokenClaimAuthenticationProviderTest {
         assertThat(result, equalTo(jwtTokenAuthentication));
     }
 
-    @Test(expected = TokenAuthenticationFailureException.class)
+    @Test
     public void shouldThrowTokenAuthenticationFailureExceptionOnCommunicationFailure() throws CommunicationFailureException {
 
         // given
         doThrow(CommunicationFailureException.class).when(authenticationService).claimToken(authentication);
 
         // when
-        jwtTokenClaimAuthenticationProvider.authenticate(authentication);
+        Assertions.assertThrows(TokenAuthenticationFailureException.class, () -> jwtTokenClaimAuthenticationProvider.authenticate(authentication));
 
         // then
         // exception expected
     }
 
-    @Test(expected = AuthenticationException.class)
+    @Test
     public void shouldThrowAuthenticationExceptionOnAuthenticationFailure() throws CommunicationFailureException {
 
         // given
         doThrow(UnauthorizedAccessException.class).when(authenticationService).claimToken(authentication);
 
         // when
-        jwtTokenClaimAuthenticationProvider.authenticate(authentication);
+        Assertions.assertThrows(AuthenticationException.class, () -> jwtTokenClaimAuthenticationProvider.authenticate(authentication));
 
         // then
         // exception expected
