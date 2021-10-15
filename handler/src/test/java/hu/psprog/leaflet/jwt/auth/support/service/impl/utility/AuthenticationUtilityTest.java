@@ -4,17 +4,18 @@ import hu.psprog.leaflet.api.rest.response.user.LoginResponseDataModel;
 import hu.psprog.leaflet.jwt.auth.support.AbstractTokenRelatedTest;
 import hu.psprog.leaflet.jwt.auth.support.domain.AuthenticationUserDetailsModel;
 import hu.psprog.leaflet.jwt.auth.support.domain.JWTTokenAuthentication;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extensions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import java.text.ParseException;
@@ -30,7 +31,10 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Peter Smith
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@Extensions({
+        @ExtendWith(SpringExtension.class),
+        @ExtendWith(MockitoExtension.class)
+})
 @TestExecutionListeners(listeners = {
         DirtiesContextTestExecutionListener.class,
         WithSecurityContextTestExecutionListener.class})
@@ -49,9 +53,8 @@ public class AuthenticationUtilityTest extends AbstractTokenRelatedTest {
     @InjectMocks
     private AuthenticationUtility authenticationUtility;
 
-    @Before
+    @BeforeEach
     public void setup() throws ParseException {
-        MockitoAnnotations.initMocks(this);
         given(jwtTokenPayloadReader.readPayload(TOKEN)).willReturn(prepareAuthenticationUserDetailsModel(EXPECTED_DATE));
     }
 

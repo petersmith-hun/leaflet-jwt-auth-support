@@ -3,11 +3,11 @@ package hu.psprog.leaflet.jwt.auth.support.domain.deserializer;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import hu.psprog.leaflet.jwt.auth.support.AbstractTokenRelatedTest;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -22,7 +22,7 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class JWTExpirationDateDeserializerTest extends AbstractTokenRelatedTest {
 
     private static final String TIMESTAMP = "1515320501";

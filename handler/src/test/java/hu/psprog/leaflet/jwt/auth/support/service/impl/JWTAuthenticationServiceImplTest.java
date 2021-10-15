@@ -9,14 +9,14 @@ import hu.psprog.leaflet.bridge.service.UserBridgeService;
 import hu.psprog.leaflet.jwt.auth.support.AbstractTokenRelatedTest;
 import hu.psprog.leaflet.jwt.auth.support.exception.TokenAuthenticationFailureException;
 import hu.psprog.leaflet.jwt.auth.support.service.impl.utility.AuthenticationUtility;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
-
-import java.text.ParseException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,6 +28,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Peter Smith
  */
+@ExtendWith(MockitoExtension.class)
 public class JWTAuthenticationServiceImplTest extends AbstractTokenRelatedTest {
 
     private static final String TOKEN = "auth-token";
@@ -40,7 +41,7 @@ public class JWTAuthenticationServiceImplTest extends AbstractTokenRelatedTest {
     @Mock
     private AuthenticationUtility authenticationUtility;
 
-    @Mock
+    @Mock(lenient = true)
     private Authentication baseAuthentication;
 
     @Mock
@@ -49,9 +50,8 @@ public class JWTAuthenticationServiceImplTest extends AbstractTokenRelatedTest {
     @InjectMocks
     private JWTAuthenticationServiceImpl authenticationService;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
         given(baseAuthentication.getPrincipal()).willReturn(USERNAME);
         given(baseAuthentication.getCredentials()).willReturn(CREDENTIALS);
     }
@@ -107,7 +107,7 @@ public class JWTAuthenticationServiceImplTest extends AbstractTokenRelatedTest {
     }
 
     @Test
-    public void shouldClaimTokenWithSuccess() throws CommunicationFailureException, ParseException {
+    public void shouldClaimTokenWithSuccess() throws CommunicationFailureException {
 
         // given
         LoginResponseDataModel loginResponseDataModel = prepareLoginResponseDataModel(true);
@@ -121,27 +121,27 @@ public class JWTAuthenticationServiceImplTest extends AbstractTokenRelatedTest {
         assertThat(result, equalTo(jwtAuthentication));
     }
 
-    @Test(expected = TokenAuthenticationFailureException.class)
+    @Test
     public void shouldThrowTokenAuthenticationFailureOnInvalidCredentials() throws CommunicationFailureException {
 
         // given
         given(userBridgeService.claimToken(prepareLoginRequestModel())).willReturn(prepareLoginResponseDataModel(false));
 
         // when
-        authenticationService.claimToken(baseAuthentication);
+        Assertions.assertThrows(TokenAuthenticationFailureException.class, () -> authenticationService.claimToken(baseAuthentication));
 
         // then
         // exception expected
     }
 
-    @Test(expected = TokenAuthenticationFailureException.class)
+    @Test
     public void shouldThrowTokenAuthenticationFailureOnNullResponse() throws CommunicationFailureException {
 
         // given
         given(userBridgeService.claimToken(prepareLoginRequestModel())).willReturn(null);
 
         // when
-        authenticationService.claimToken(baseAuthentication);
+        Assertions.assertThrows(TokenAuthenticationFailureException.class, () -> authenticationService.claimToken(baseAuthentication));
 
         // then
         // exception expected

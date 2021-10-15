@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.psprog.leaflet.jwt.auth.support.AbstractTokenRelatedTest;
 import hu.psprog.leaflet.jwt.auth.support.domain.AuthenticationUserDetailsModel;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.doThrow;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class JWTTokenPayloadReaderTest extends AbstractTokenRelatedTest {
 
     private static final String EXPECTED_DATE = "2018-01-07 12:12:01+0000";
